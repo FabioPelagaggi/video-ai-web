@@ -1,0 +1,43 @@
+# @name server up
+GET http://localhost:3333
+
+###
+
+# @name get-prompts
+GET http://localhost:3333/prompts
+
+###
+
+# @name upload
+POST http://localhost:3333/videos
+Content-Type: multipart/form-data; boundary=MfnBoundry
+
+--MfnBoundry
+Content-Disposition: form-data; name="file"; filename="testapi.mp3"
+Content-Type: audio/mpeg
+
+< ./testapi.mp3
+--MfnBoundry--
+
+
+###
+
+# @name transcription
+POST http://localhost:3333/videos/73ca3577-fa29-4996-b787-3a0750e2c06c/transcription
+Content-Type: application/json
+
+{
+    "prompt": "shadowheart talking"
+}
+
+###
+
+# @name generate-ai-completion
+POST http://localhost:3333/ai/generate
+Content-Type: application/json
+
+{
+    "videoId": "73ca3577-fa29-4996-b787-3a0750e2c06c",
+    "temperature": 0.8,
+    "prompt": "Shadowheart talking: '''{transcription}'''"
+}

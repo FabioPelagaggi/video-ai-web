@@ -7,7 +7,7 @@
 	<a href="#-layout">Layout</a> • 
 	<a href="#-start-project">How to start the project</a> • 
 	<a href="#-tech">Tech Stack</a> • 
-	<a href="#-version">Version</a> •
+	<a href="#-version">Version</a>
 </p>
 	
 	
