@@ -1,9 +1,9 @@
 import { fastify } from "fastify";
+import { getAllPromptsRoute } from "./routes/get-all-prompts";
 
 const server = fastify();
-server.get('/', async (request, reply) => {
-    return 'Server is up and running'
-})
+
+server.register(getAllPromptsRoute);
 
 server
   .listen({
