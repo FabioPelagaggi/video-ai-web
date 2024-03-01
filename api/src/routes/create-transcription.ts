@@ -45,6 +45,6 @@ export async function createTranscriptionRoute(app: FastifyInstance) {
       },
     });
 
-    return { transcription };
+    return response.text
   });
 }

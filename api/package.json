@@ -17,6 +17,8 @@
   "dependencies": {
     "@fastify/multipart": "^8.1.0",
     "@prisma/client": "^5.10.2",
-    "fastify": "^4.26.1"
+    "fastify": "^4.26.1",
+    "openai": "^4.28.4",
+    "zod": "^3.22.4"
   }
 }

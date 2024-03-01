@@ -1,6 +1,3 @@
-# @name server up
-GET http://localhost:3333
-
 ###
 
 # @name get-prompts
@@ -16,14 +13,14 @@ Content-Type: multipart/form-data; boundary=MfnBoundry
 Content-Disposition: form-data; name="file"; filename="testapi.mp3"
 Content-Type: audio/mpeg
 
-< ./testapi.mp3
+< ./test-files/testapi.mp3
 --MfnBoundry--
 
 
 ###
 
 # @name transcription
-POST http://localhost:3333/videos/73ca3577-fa29-4996-b787-3a0750e2c06c/transcription
+POST http://localhost:3333/videos/91112a29-5a1f-4643-991c-c3467e19aee7/transcription
 Content-Type: application/json
 
 {
