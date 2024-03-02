@@ -10,21 +10,21 @@ POST http://localhost:3333/videos
 Content-Type: multipart/form-data; boundary=MfnBoundry
 
 --MfnBoundry
-Content-Disposition: form-data; name="file"; filename="testapi.mp3"
+Content-Disposition: form-data; name="file"; filename="testapiaudio1.mp3"
 Content-Type: audio/mpeg
 
-< ./test-files/testapi.mp3
+< ./test-files/testapiaudio1.mp3
 --MfnBoundry--
 
 
 ###
 
 # @name transcription
-POST http://localhost:3333/videos/91112a29-5a1f-4643-991c-c3467e19aee7/transcription
+POST http://localhost:3333/videos/7c0df7e7-7f1d-4426-b6e4-8c7af90bbc90/transcription
 Content-Type: application/json
 
 {
-    "prompt": "shadowheart talking"
+    "prompt": "Video about the game baldur's gate 3"
 }
 
 ###
@@ -34,7 +34,7 @@ POST http://localhost:3333/ai/generate
 Content-Type: application/json
 
 {
-    "videoId": "73ca3577-fa29-4996-b787-3a0750e2c06c",
+    "videoId": "7c0df7e7-7f1d-4426-b6e4-8c7af90bbc90",
     "temperature": 0.8,
-    "prompt": "Shadowheart talking: '''{transcription}'''"
+    "prompt": "IGN Article about Baldur's Gate 3: '''{transcription}'''"
 }
