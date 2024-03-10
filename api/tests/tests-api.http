@@ -1,0 +1,40 @@
+###
+
+# @name get-prompts
+GET http://localhost:3333/prompts
+
+###
+
+# @name upload
+POST http://localhost:3333/videos
+Content-Type: multipart/form-data; boundary=MfnBoundry
+
+--MfnBoundry
+Content-Disposition: form-data; name="file"; filename="testapiaudio1.mp3"
+Content-Type: audio/mpeg
+
+< ./tests/test-files/testapiaudio1.mp3
+--MfnBoundry--
+
+
+###
+
+# @name transcription
+POST http://localhost:3333/videos/ae0b410f-9b26-43da-9d56-f156cce5057b/transcription
+Content-Type: application/json
+
+{
+    "prompt": "Video about the game baldur's gate 3"
+}
+
+###
+
+# @name generate-ai-completion
+POST http://localhost:3333/ai/generate
+Content-Type: application/json
+
+{
+    "videoId": "ae0b410f-9b26-43da-9d56-f156cce5057b",
+    "temperature": 0.8,
+    "prompt": "IGN Article about Baldur's Gate 3: '''{transcription}'''"
+}
