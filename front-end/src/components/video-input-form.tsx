@@ -4,6 +4,8 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { useMemo, useRef, useState } from "react";
+import { loadFFmpeg } from "@/lib/ffmpeg";
+import { fetchFile } from "@ffmpeg/util";
 
 export function VideoInputForm() {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -19,14 +21,16 @@ export function VideoInputForm() {
     setVideoFile(selectedFile);
   }
 
-  function handleVideoUpload(event: React.FormEvent<HTMLFormElement>) {
+  async function handleVideoUpload(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const prompt = promptInput.current?.value;
 
     if (!videoFile) return;
 
+    const audioFile = await convertVideoToAudio(videoFile);
 
+    console.log(audioFile);
   }
 
   const previewURL = useMemo(() => {
@@ -34,6 +38,46 @@ export function VideoInputForm() {
 
     return URL.createObjectURL(videoFile);
   }, [videoFile]);
+
+  async function convertVideoToAudio(video: File) {
+    console.log("Converting video to audio...");
+
+    const ffmpeg = await loadFFmpeg();
+
+    await ffmpeg.writeFile("input.mp4", await fetchFile(video));
+
+    // ---  To Debug FFmpeg
+    //ffmpeg.on('log', log => console.log(log.message));
+
+    ffmpeg.on("progress", (progress) => {
+      console.log(
+        "Processing: " + Math.round(progress.progress * 100) + "% done"
+      );
+    });
+
+    await ffmpeg.exec([
+      "-i",
+      "input.mp4",
+      "-map",
+      "0:a",
+      "-b:a",
+      "20k",
+      "-acodec",
+      "libmp3lame",
+      "output.mp3",
+    ]);
+
+    const data = await ffmpeg.readFile("output.mp3");
+
+    const audioFileBlob = new Blob([data], { type: "audio/mpeg" });
+    const audioFile = new File([audioFileBlob], "audio.mp3", {
+      type: "audio/mpeg",
+    });
+
+    console.log("Converted video to audio!");
+
+    return audioFile;
+  }
 
   return (
     <form onSubmit={handleVideoUpload} className="space-y-6">
