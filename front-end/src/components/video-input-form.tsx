@@ -3,7 +3,7 @@ import { Separator } from "./ui/separator";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { useMemo, useRef, useState } from "react";
+import { ChangeEvent, useMemo, useRef, useState } from "react";
 import { loadFFmpeg } from "@/lib/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { api } from "@/lib/axios";
@@ -23,7 +23,12 @@ const statusMessages = {
   success: "Transcription generated!",
 };
 
-export function VideoInputForm() {
+interface VideoInputFormProps {
+  onVideoUploaded: (videoId: string) => void;
+
+}
+
+export function VideoInputForm(props: VideoInputFormProps) {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>("idle");
 
@@ -76,6 +81,8 @@ export function VideoInputForm() {
     // console.log(transcription.data);
 
     setStatus("success");
+
+    props.onVideoUploaded(videoId);
   }
 
   const previewURL = useMemo(() => {
