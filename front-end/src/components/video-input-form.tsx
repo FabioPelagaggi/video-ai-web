@@ -30,7 +30,7 @@ export function VideoInputForm() {
 
     const audioFile = await convertVideoToAudio(videoFile);
 
-    console.log(audioFile);
+    console.log(audioFile, prompt);
   }
 
   const previewURL = useMemo(() => {
@@ -74,7 +74,8 @@ export function VideoInputForm() {
       type: "audio/mpeg",
     });
 
-    console.log("Converted video to audio!");
+    console.log("Conversion finished.");
+    console.log("Audio file created.");
 
     return audioFile;
   }
