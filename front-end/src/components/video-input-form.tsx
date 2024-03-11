@@ -8,8 +8,25 @@ import { loadFFmpeg } from "@/lib/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { api } from "@/lib/axios";
 
+type Status =
+  | "idle"
+  | "converting"
+  | "uploading"
+  | "generating"
+  | "success"
+  | "error";
+
+const statusMessages = {
+  converting: "Converting video to audio...",
+  uploading: "Uploading audio file...",
+  generating: "Generating transcription...",
+  success: "Transcription generated!",
+};
+
 export function VideoInputForm() {
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [status, setStatus] = useState<Status>("idle");
+
   const promptInput = useRef<HTMLTextAreaElement>(null);
 
   function handleFileSelected(event: React.ChangeEvent<HTMLInputElement>) {
@@ -29,6 +46,8 @@ export function VideoInputForm() {
 
     if (!videoFile) return;
 
+    setStatus("converting");
+
     const audioFile = await convertVideoToAudio(videoFile);
 
     // --- Test Conversion and Prompts
@@ -38,6 +57,8 @@ export function VideoInputForm() {
 
     formData.append("file", audioFile);
 
+    setStatus("uploading");
+
     const response = await api.post("/videos", formData);
 
     // --- Test Response
@@ -45,12 +66,16 @@ export function VideoInputForm() {
 
     const videoId = response.data.video.id;
 
+    setStatus("generating");
+
     const transcription = await api.post(`/videos/${videoId}/transcription`, {
       prompt,
     });
 
     // --- Test Transcription
-    console.log(transcription.data);
+    // console.log(transcription.data);
+
+    setStatus("success");
   }
 
   const previewURL = useMemo(() => {
@@ -133,15 +158,29 @@ export function VideoInputForm() {
       <div className="space-y-2">
         <Label htmlFor="transcription_prompt">Add Prompts...</Label>
         <Textarea
+          disabled={status != "idle"}
           ref={promptInput}
           id="transcription_prompt"
           className="h-20 leading-relaxed resize-none"
           placeholder="Add video keywords separated by commas (,)."
         />
       </div>
-      <Button type="submit" className="w-full">
-        Upload
-        <Upload className="w-4 h-4 m-2" />
+      <Button
+        data-success={status == "success"}
+        disabled={status != "idle"}
+        type="submit"
+        className="w-full data-[success=true]:bg-emerald-600"
+      >
+        {status === "idle" ? (
+          <>
+            <Upload className="w-5 h-5" />
+            Upload Video
+          </>
+        ) : status === "error" ? (
+          "Error occurred"
+        ) : (
+          statusMessages[status]
+        )}
       </Button>
     </form>
   );
