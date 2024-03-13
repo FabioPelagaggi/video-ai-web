@@ -83,7 +83,6 @@ npm install
 - [x] Radix UI
 - [x] Shadcn/ui
 - [x] Axios
-- [x] TypeScript
 - [x] NodeJs
 - [x] Prisma
 - [x] Fastify
