@@ -89,6 +89,7 @@ npm install
 - [x] Zod
 - [x] Sqlite
 - [x] OpenAI
+- [x] Rest Client
 
 <a id="-version"></a>
 
